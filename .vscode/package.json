@@ -1,0 +1,18 @@
+{
+  "name": "safecodechecker",
+  "displayName": "The Safe Code Checker",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "activationEvents": ["onCommand:ollama.check"],
+  "main": "extension.ts",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ollama.check",
+        "title": "Ollama: Ask Model"
+      }
+    ]
+  }
+}
