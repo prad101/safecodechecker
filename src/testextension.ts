@@ -1,11 +1,12 @@
-import * as fs from 'fs';
-import dotenv from 'dotenv';
-import * as path from 'path';
+// import * as fs from 'fs';
+// import dotenv from 'dotenv';
+// import * as path from 'path';
+// import fetch from 'node-fetch';
 //dotenv.config();   
 
 export async function generateStream(prompt: string): Promise<void> {
 
-  const prompts: string[] = ["check if this would make a runtime error: ", "check if code is sharing personal inormation including private keys: "];
+  const prompts: string[] = ["check if this would make a runtime error: ", "check if code is sharing personal information including private keys, database credentials, or cryptographic secrets:", ];
 
    for(var p of prompts){
   prompt =  p + prompt; 

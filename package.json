@@ -4,31 +4,51 @@
   "description": "a vs code extension that checks if your code is safe",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.104.1"
+    "vscode": "^1.106.1"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": ["onCommand:safecodechecker.checkcode"],
-  "main": "./src/testextension.ts",
+  "activationEvents": [],
+  "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "safecodechecker.checkcode",
         "title": "check for safe code"
       }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "safecodechecker.checkcode",
+          "group": "navigation"
+        }
     ]
   },
+  "viewsContainers": {
+    "activitybar": [
+      {
+        "id": "safeCodeSidebar",
+        "title": "Safe Code",
+        "icon": "media/shield.svg"
+      }
+    ]
+  },
+  "views": {
+    "safeCodeSidebar": [
+      {
+        "id": "safeCodeReport",
+        "name": "Code Safety Report"
+      }
+    ]
+  }
+  },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "compile": "tsc -p ./"
   },
   "devDependencies": {
-    "@types/vscode": "^1.104.1",
+    "@types/vscode": "^1.106.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "typescript-eslint": "^8.46.3",
