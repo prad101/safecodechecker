@@ -16,6 +16,10 @@
       {
         "command": "safecodechecker.checkcode",
         "title": "check for safe code"
+      },
+      {
+        "command": "safecodechecker.clear",
+        "title": "clear code diagnostics"
       }
     ],
     "menus": {
@@ -24,37 +28,46 @@
           "command": "safecodechecker.checkcode",
           "group": "navigation"
         }
-    ]
-  },
-  "viewsContainers": {
-    "activitybar": [
-      {
-        "id": "safeCodeSidebar",
-        "title": "Safe Code",
-        "icon": "media/shield.svg"
-      }
-    ]
-  },
-  "views": {
-    "safeCodeSidebar": [
-      {
-        "id": "safeCodeReport",
-        "name": "Code Safety Report"
-      }
-    ]
-  }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "safeCodeSidebar",
+          "title": "Safe Code",
+          "icon": "media/shield.svg"
+        }
+      ]
+    },
+    "views": {
+      "safeCodeSidebar": [
+        {
+          "id": "safeCodeReport",
+          "name": "Code Safety Report"
+        }
+      ]
+    }
   },
   "scripts": {
-    "compile": "tsc -p ./"
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.106.1",
+    "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.46.3",
+    "@types/vscode": "^1.106.1",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "eslint": "^9.39.1",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.46.3"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1"
   }
 }

@@ -1,0 +1,100 @@
+security_analysis:
+  comprehensive_check:
+    name: "Comprehensive Security Check"
+    description: "Full security analysis that covers various vulnerability types"
+    prompt: |
+      Perform a comprehensive security audit of the following code. Analyze for:
+
+      DEPENDENCIES & PACKAGES:
+      - Outdated or vulnerable dependencies
+      - Insecure package configurations
+
+      CREDENTIAL & SECRET MANAGEMENT:
+      - Hardcoded credentials, API keys, tokens
+      - Database connection strings
+      - Cryptographic materials
+
+      DATA SECURITY:
+      - Injection vulnerabilities (SQL, NoSQL, command)
+      - XSS and CSRF vulnerabilities
+      - Insecure data transmission
+      - Missing encryption
+      - Improper access controls
+      
+      ANALYSIS GUIDELINES:
+      1. Focus on code that is ACTUALLY PRESENT in the input
+      2. Report vulnerabilities with SPECIFIC evidence from the code
+      3. Do NOT assume context that isn't in the code (e.g., don't report "missing database connection" unless there's database code)
+      4. Standard library usage is generally safe unless there's a specific vulnerability
+      
+      Code:
+      {code}
+
+      Provide a severity rating (Critical/High/Medium/Low) for each finding and actionable remediation steps.
+      If vulnerabilities found, format your response as JSON with this structure. 
+
+      {{
+        "vulnerabilities": [
+          {{
+            "type": "string",
+            "severity": "Critical|High|Medium|Low",
+            "description": "string",
+            "location": "line number or file",
+            "recommendation": "string",
+            "cwe_id": "string (optional)",
+            "owasp_category": "string (optional)"
+          }}
+        ],
+        "summary": {{
+          "total_vulnerabilities": number,
+          "critical_count": number,
+          "high_count": number,
+          "medium_count": number,
+          "low_count": number
+        }}
+      }}
+
+      If no vulnerabilities found, return empty vulnerabilities array. Return ONLY valid JSO like below,
+      {{
+        "vulnerabilities": [],
+        "summary": {{
+          "total_vulnerabilities": 0,
+          "critical_count": 0,
+          "high_count": 0,
+          "medium_count": 0,
+          "low_count": 0
+        }}
+      }}.
+
+
+
+  secrets_detection:
+    name: "Sensitive Data Detection"
+    description: "Detect hardcoded secrets and credentials"
+    prompt: |
+      Review this code for hardcoded sensitive information and credential exposure. Look for:
+      - API keys, tokens, and secrets
+      - Database connection strings and passwords
+      - Cryptographic keys and certificates
+      - AWS/cloud provider credentials
+      - Private keys and authentication tokens
+      
+      Code:
+      {code}
+      
+      For each finding, provide the type of secret, its location, and secure alternatives.
+      Return results as JSON array.
+
+  dependency_check:
+    name: "Dependency Vulnerability Check"
+    description: "Check for outdated and vulnerable packages"
+    prompt: |
+      Analyze the following code for security vulnerabilities related to dependencies and packages. Identify:
+      - Outdated packages with known CVEs
+      - Packages with security advisories
+      - Deprecated libraries or functions
+      
+      Code:
+      {code}
+      
+      Provide specific version numbers and CVE IDs where applicable.

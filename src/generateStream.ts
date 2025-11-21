@@ -1,50 +1,80 @@
-export async function generateStream(prompt: string): Promise<string> {
-    const prompts = [
-        "check if this would make a runtime error: ",
-        "check if code is sharing personal information including private keys, database credentials, or cryptographic secrets:"
-    ];
-    let finalResult = "";
-    for (const p of prompts) {
-        const fullPrompt = p + prompt;
+import * as yaml from "js-yaml";
+import * as fs from "fs";
+import * as path from "path";
 
-        const res = await fetch("http://localhost:11434/api/generate", {
+// Load YAML
+// const yamlPath = 'src/prompts.yaml';
+const yamlPath = path.join(__dirname, "../src/prompts.yaml");
+let prompts: any = {};
+
+try {
+    prompts = yaml.load(fs.readFileSync(yamlPath, "utf8"));
+} catch (err) {
+    console.error("Failed to load YAML prompts:", err);
+}
+
+// get prompt template
+const promptTemplate = prompts.security_analysis.comprehensive_check.prompt;
+
+export async function generateStream(code: string): Promise<string> {
+
+    let jsonResult: any = {};
+
+    const model = "llama3.1:latest"
+
+    const finalPrompt = promptTemplate.replace("{code}", code) +
+        "\n\nReturn ONLY valid JSON. If unable, return raw text.";
+    console.log("Sending prompt\n", finalPrompt.substring(0, 100) + "...");
+
+    const res = await fetch(
+        "http://localhost:11434/api/generate", 
+        {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "llama3.1:latest",
-                prompt: fullPrompt,
-                stream: true
+                model: model,
+                // model: "codellama:7b",
+                prompt: finalPrompt,
+                options: {
+                    temperature: 0.2,
+                    top_k: 10,
+                    top_p: 0.9,
+                    repeat_penalty: 1.2,
+                    num_predict: 2048,
+                },
+                stream: false
             })
-        });
-
-        if (!res.body) {
-            throw new Error("No response body from Ollama");
         }
+    );
 
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-
-        let partialResult = "";
-
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-
-            const chunk = decoder.decode(value);
-
-            for (const line of chunk.split("\n")) {
-                if (!line.trim()) continue;
-                const obj = JSON.parse(line);
-                if (obj.response) {
-                    partialResult += obj.response;
-                    // console.log(obj.response); 
-                }
-            }
-        }
-        finalResult += partialResult + "\n\n-----------------------\n\n";
-        // console.log("\n\n[done]");
+    if (!res.body) {
+        throw new Error("No response body from Ollama");
     }
-    return finalResult;
+    // print model name
+    console.log("Receiving streamed response from", model);
+    jsonResult = await res.json(); // { response: "..." }
+    let output = extractJson(jsonResult.response);
+
+    // Parse JSON, raw text if fails
+    try {
+        const jsonObj = JSON.parse(output);
+        return JSON.stringify(jsonObj, null, 2); // pretty JSON
+    } catch (err) {
+        console.warn("JSON parse failed, returning raw model output.");
+        return output; // fallback: raw LLM text
+    }
+}
+
+// Extract JSON substring from text
+function extractJson(text: string): string {
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
+
+    if (start === -1 || end === -1 || end <= start) {
+        console.warn("No JSON object found in LLM output, returning raw text.");
+    }
+
+    return text.substring(start, end + 1);
 }

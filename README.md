@@ -1,71 +1,79 @@
 # safecodechecker README
 
-This is the README for your extension "safecodechecker". After writing up a brief description, we recommend including the following sections.
+## Safe Code Checker – Developer Setup Guide
 
-## Features
+1. Prerequisites
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Before starting, install:
 
-For example if there is an image subfolder under your extension project workspace:
+Node.js (LTS recommended)
+https://nodejs.org
 
-\!\[feature X\]\(images/feature-x.png\)
+VS Code
+https://code.visualstudio.com
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Ollama (for running local models like llama3.1 or codellama)
+https://ollama.com/download
 
-## Requirements
+(Optional) Recommended model: 
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+```ollama pull llama3.1```
 
-## Extension Settings
+2. Install Project Dependencies
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+```npm install```
 
-For example:
+3. Build the extension
 
-This extension contributes the following settings:
+```npm run compile```
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+4. Run the Extension in Debug Mode (F5)
 
-## Known Issues
+VS Code provides a built-in extension development host.
+To launch it:
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+1. Open the project folder in VS Code.
 
-## Release Notes
+2. Press F5 (or Run → Start Debugging).
 
-Users appreciate release notes as you update your extension.
+3. A new VS Code window (Extension Development Host) will open.
 
-### 1.0.0
+4. Open any code file in that window.
 
-Initial release of ...
+5. Run the Safe Code Checker Command
 
-### 1.0.1
 
-Fixed issue #.
+5. Inside the Extension Development Host:
 
-### 1.1.0
+1. Press Cmd+Shift+P (macOS)
+or Ctrl+Shift+P (Windows/Linux)
 
-Added features X, Y, and Z.
+2. Type the command title:
 
----
+“check for safe code” (or any title set)
 
-## Following extension guidelines
+3. Hit Enter to Run.
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+The extension will:
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+- Read the contents of the active file
+- Pass it through the LLM
+- Display results in a fresh Markdown document
 
-## Working with Markdown
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+6. How the Flow Works
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+1. extension.ts registers a command (safecodechecker.checkcode).
 
-## For more information
+2. When run, it grabs the opened file's contents.
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+3. generateStream() sends the code to your local LLM through Ollama.
 
-**Enjoy!**
+4. The model outputs either:
+- Valid JSON (preferred), 
+- Raw analysis text (fallback)
+
+5. Output is rendered and showcased in 3 ways, 
+    - JSON view as a split.
+    - Inline code highlights
+    - Problems Panel
