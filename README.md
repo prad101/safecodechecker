@@ -88,7 +88,7 @@ The extension will:
 ```npm install js-yaml @types/js-yaml```
 
 2. Command not found: safecodechecker.checkcode
-Ensure package.json has the same command name and elsewhere like in extension.ts
+    - Ensure package.json has the same command name and elsewhere like in extension.ts
 
 ```c
 "activationEvents": [
