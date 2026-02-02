@@ -4,6 +4,19 @@ An AI Assistant that performs security audit of the code before its fed into the
 
 This project was developed and submitted for the KSU AI Club 2025 Fall Semester Hackathon.
 
+## System Architecture
+
+![Alt 1](resources/all_vulnerabilities_demo.png)
+
+## Demo
+
+![Alt 1](resources/all_vulnerabilities_demo.png)
+![Alt 1](resources/oob_array_demo.png)
+![Alt 1](resources/oom_demo.png)
+![Alt 1](resources/data_weakness_demo.png)
+![Alt 1](resources/safe_code_demo.png)
+
+
 ## Safe Code Checker – Developer Setup Guide
 
 ### 1. Prerequisites
