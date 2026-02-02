@@ -6,7 +6,7 @@ This project was developed and submitted for the KSU AI Club 2025 Fall Semester 
 
 ## System Architecture
 
-![Alt 1](resources/all_vulnerabilities_demo.png)
+![Alt 1](resources/safecodechecker_arch.png)
 
 ## Demo
 
