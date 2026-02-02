@@ -1,5 +1,7 @@
 # safecodechecker README
 
+An AI Assistant that performs security audit of the code before its fed into the AI Generators. Built a VS code extension that runs an one to multiple ollama models. The user can enter code into a file and the extension runs it through a prompt to check and highlight for security issues. This project was developed and submitted for the KSU AI Club 2025 Fall Semester Hackathon.
+
 ## Safe Code Checker – Developer Setup Guide
 
 ### 1. Prerequisites
